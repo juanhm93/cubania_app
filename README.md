@@ -1,17 +1,49 @@
-# cubania_app
+# Cubanía app
 
-A new Flutter project.
+App móvil (Flutter) para los alumnos de Cubanía. Consume la API v1 del backend
+[`juanhm93/cubaniasc`](https://github.com/juanhm93/cubaniasc); el contrato está en
+`docs/api/v1/openapi.yaml` de ese repo.
 
-## Getting Started
+## Correr en local
 
-This project is a starting point for a Flutter application.
+1. Levanta el backend con `php artisan serve` (puerto 8000). El correo con el código
+   llega al driver configurado en `MAIL_MAILER` (con `log`, búscalo en `storage/logs/laravel.log`).
+2. En este repo:
 
-A few resources to get you started if this is your first Flutter project:
+   ```sh
+   flutter pub get
+   flutter run
+   ```
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+Sin configuración, la app apunta a `http://10.0.2.2:8000/api/v1` en el emulador de
+Android y a `http://localhost:8000/api/v1` en el simulador de iOS. Para otro servidor:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```sh
+flutter run --dart-define=API_BASE_URL=https://cubania.purphura.com/api/v1
+```
+
+> Si usas Herd (`https://cubaniasc.test`), el emulador no resuelve ese dominio.
+> Usa `php artisan serve` o pasa la IP de tu máquina en `API_BASE_URL`.
+
+## Estructura
+
+```
+lib/
+  core/        config, cliente HTTP (Dio), errores, almacenamiento seguro del token, tema
+  features/
+    auth/      login por código: datos, estado (Riverpod) y pantallas
+    profile/   "Mi perfil"
+```
+
+- Estado con `flutter_riverpod` (sin generación de código).
+- El token se guarda con `flutter_secure_storage` (Keychain / Keystore).
+- Si la API responde 401 a una petición autenticada, la app vuelve al login.
+
+## Calidad
+
+```sh
+flutter analyze
+flutter test
+```
+
+CI (`.github/workflows/flutter.yml`) corre ambos en cada PR.

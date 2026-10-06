@@ -1,30 +1,70 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
+import 'package:cubania_app/app.dart';
+import 'package:cubania_app/core/storage/token_storage.dart';
+import 'package:cubania_app/features/auth/application/auth_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:cubania_app/main.dart';
+import 'support/fakes.dart';
+
+Widget _app({String? storedToken, FakeAuthRepository? repository}) {
+  return ProviderScope(
+    overrides: [
+      tokenStorageProvider.overrideWithValue(InMemoryTokenStorage(storedToken)),
+      authRepositoryProvider.overrideWithValue(
+        repository ?? FakeAuthRepository(),
+      ),
+    ],
+    child: const CubaniaApp(),
+  );
+}
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('shows the login screen when there is no session', (
+    tester,
+  ) async {
+    await tester.pumpWidget(_app());
+    await tester.pumpAndSettle();
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    expect(find.text('Enviarme el código'), findsOneWidget);
+    expect(find.text('Correo'), findsWidgets);
+  });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
+  testWidgets('validates the email before asking for a code', (tester) async {
+    await tester.pumpWidget(_app());
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Enviarme el código'));
     await tester.pump();
+    expect(find.text('Ingresa tu correo.'), findsOneWidget);
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    await tester.enterText(find.byKey(const Key('identifierField')), 'ana@');
+    await tester.tap(find.text('Enviarme el código'));
+    await tester.pump();
+    expect(find.text('Ese correo no parece válido.'), findsOneWidget);
+  });
+
+  testWidgets('asks for the code after a valid email', (tester) async {
+    await tester.pumpWidget(_app());
+    await tester.pumpAndSettle();
+
+    await tester.enterText(
+      find.byKey(const Key('identifierField')),
+      'ana@example.com',
+    );
+    await tester.tap(find.text('Enviarme el código'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Revisa tu correo'), findsOneWidget);
+    expect(find.byKey(const Key('codeField')), findsOneWidget);
+  });
+
+  testWidgets('opens the profile when a valid token is stored', (tester) async {
+    await tester.pumpWidget(_app(storedToken: '12|secret'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Mi perfil'), findsOneWidget);
+    expect(find.text('Básico 1'), findsOneWidget);
+    expect(find.text('Salsa casino'), findsOneWidget);
   });
 }
