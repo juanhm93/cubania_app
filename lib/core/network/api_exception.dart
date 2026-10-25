@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 /// An API error translated into something the UI can show.
 class ApiException implements Exception {
@@ -15,6 +16,12 @@ class ApiException implements Exception {
     final response = exception.response;
 
     if (response == null) {
+      if (kDebugMode) {
+        debugPrint(
+          'API sin respuesta: ${exception.type.name} '
+          '${exception.requestOptions.uri} → ${exception.error}',
+        );
+      }
       return const ApiException(message: connectionErrorMessage);
     }
 

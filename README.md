@@ -22,8 +22,18 @@ Android y a `http://localhost:8000/api/v1` en el simulador de iOS. Para otro ser
 flutter run --dart-define=API_BASE_URL=https://cubania.purphura.com/api/v1
 ```
 
-> Si usas Herd (`https://cubaniasc.test`), el emulador no resuelve ese dominio.
-> Usa `php artisan serve` o pasa la IP de tu máquina en `API_BASE_URL`.
+### Con Herd (`cubaniasc.test`)
+
+El emulador no resuelve dominios `.test`, pero sí llega al nginx de Herd en
+`10.0.2.2:80`. Basta con mandarle la cabecera `Host` del sitio:
+
+```sh
+cp env/local.example.json env/local.json   # ignorado por git; ajústalo a tu máquina
+flutter run --dart-define-from-file=env/local.json
+```
+
+En VS Code, el perfil **Cubanía (local)** de `.vscode/launch.json` hace lo mismo.
+En el simulador de iOS, cambia `10.0.2.2` por `localhost` en tu `env/local.json`.
 
 ## Estructura
 

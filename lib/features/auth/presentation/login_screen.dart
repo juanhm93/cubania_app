@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/network/api_exception.dart';
+import '../../../core/widgets/cubania_logo.dart';
 import '../application/auth_controller.dart';
 import '../domain/student_identifier.dart';
 import 'verify_code_screen.dart';
@@ -111,15 +112,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(
-                    'Cubanía',
-                    textAlign: TextAlign.center,
-                    style: theme.textTheme.displaySmall?.copyWith(
-                      fontWeight: FontWeight.w800,
-                      color: theme.colorScheme.primary,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
+                  const CubaniaLogo(height: 180),
+                  const SizedBox(height: 24),
                   Text(
                     'Entra con el correo o la cédula con que te inscribiste. '
                     'Te enviaremos un código a tu correo.',

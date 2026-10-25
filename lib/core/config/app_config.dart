@@ -29,6 +29,13 @@ class AppConfig {
     return 'http://$host:8000/api/v1';
   }
 
+  /// Optional `Host` header from `--dart-define=API_HOST_HEADER=...`.
+  ///
+  /// Lets the emulator reach a Herd site (`cubaniasc.test`) it can't resolve:
+  /// point [apiBaseUrl] at the host machine (`http://10.0.2.2/api/v1`) and Herd
+  /// routes the request by this header. Empty means "don't override".
+  static const String apiHostHeader = String.fromEnvironment('API_HOST_HEADER');
+
   /// Sent as `device_name` when signing in; the backend names the token after it.
   static String get deviceName => 'Cubanía app (${defaultTargetPlatform.name})';
 

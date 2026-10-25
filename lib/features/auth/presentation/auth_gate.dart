@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/widgets/cubania_logo.dart';
 import '../../profile/presentation/profile_screen.dart';
 import '../application/auth_controller.dart';
 import '../application/auth_state.dart';
@@ -33,7 +34,18 @@ class _SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    return const Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CubaniaLogo(height: 200),
+            SizedBox(height: 32),
+            CircularProgressIndicator(),
+          ],
+        ),
+      ),
+    );
   }
 }
 

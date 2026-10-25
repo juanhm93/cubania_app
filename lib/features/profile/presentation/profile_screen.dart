@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/network/api_exception.dart';
+import '../../../core/theme/app_theme.dart';
 import '../../auth/application/auth_controller.dart';
 import '../../auth/domain/student_profile.dart';
 
@@ -143,34 +144,37 @@ class _LevelCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    const onCard = Colors.white;
 
-    return Card(
-      color: colorScheme.primaryContainer,
+    return DecoratedBox(
+      decoration: const BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(20)),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [CubaniaColors.morado, CubaniaColors.moradoDeep],
+        ),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: level == null
             ? Text(
                 'No tienes un curso activo en este momento.',
-                style: theme.textTheme.titleMedium?.copyWith(
-                  color: colorScheme.onPrimaryContainer,
-                ),
+                style: theme.textTheme.titleMedium?.copyWith(color: onCard),
               )
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     level!.danceType?.name ?? 'Tu nivel',
-                    style: theme.textTheme.labelLarge?.copyWith(
-                      color: colorScheme.onPrimaryContainer,
-                    ),
+                    style: theme.textTheme.labelLarge?.copyWith(color: onCard),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     level!.name,
                     style: theme.textTheme.headlineMedium?.copyWith(
                       fontWeight: FontWeight.w800,
-                      color: colorScheme.onPrimaryContainer,
+                      color: onCard,
                     ),
                   ),
                 ],
