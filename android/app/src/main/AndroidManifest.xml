@@ -1,6 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Needed in release builds to reach the Cubanía API. -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
-        android:label="cubania_app"
+        android:label="Cubanía"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

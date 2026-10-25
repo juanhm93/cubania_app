@@ -43,3 +43,9 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Local environment (copy env/local.example.json to env/local.json)
+/env/*.json
+!/env/*.example.json
+!/env/prod.json
+/.vscode/settings.json
